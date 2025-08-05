@@ -1,103 +1,117 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
+import SimpleHero from "@/components/SimpleHero";
+import SimpleProductGrid from "@/components/SimpleProductGrid";
+import FeaturesSection from "@/components/FeaturesSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
+import { useTranslation } from "@/lib/translation-context";
+import { STONE_COLORS, JEWELRY_CATEGORIES } from "@/lib/types";
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+export default function HomePage() {
+    const [products, setProducts] = useState([]);
+    const { t, language } = useTranslation();
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const fetchProducts = async () => {
+        try {
+            const response = await fetch('/api/admin/products');
+            if (response.ok) {
+                const data = await response.json();
+                setProducts(data);
+            } else {
+                // Fallback to mock data if API fails
+                const mockProducts = [
+                    {
+                        id: 1,
+                        name: language === 'es' ? "Anillo de Rubí Solitario" : "Ruby Solitaire Ring",
+                        price: 2500,
+                        image: "/api/placeholder/400/500",
+                        category: "Rings",
+                        stoneColor: "ruby",
+                        numberOfRings: 1,
+                        description: language === 'es' 
+                            ? "Elegante anillo de rubí con engaste de oro premium que captura la luz de manera excepcional" 
+                            : "Elegant ruby solitaire ring with premium gold setting that captures light exceptionally"
+                    },
+                    {
+                        id: 2,
+                        name: language === 'es' ? "Collar de Esmeralda" : "Emerald Necklace",
+                        price: 3200,
+                        image: "/api/placeholder/400/500",
+                        category: "Necklaces",
+                        stoneColor: "emerald",
+                        numberOfRings: 0,
+                        description: language === 'es' 
+                            ? "Impresionante collar de esmeralda con colgante artesanal que refleja la tradición mexicana" 
+                            : "Stunning emerald pendant necklace with artisanal craftsmanship reflecting Mexican tradition"
+                    },
+                    {
+                        id: 3,
+                        name: language === 'es' ? "Aretes de Diamante" : "Diamond Earrings",
+                        price: 1800,
+                        image: "/api/placeholder/400/500",
+                        category: "Earrings",
+                        stoneColor: "diamond",
+                        numberOfRings: 0,
+                        description: language === 'es' 
+                            ? "Aretes clásicos de diamante con corte perfecto que brillan con elegancia atemporal" 
+                            : "Classic diamond stud earrings with perfect cut that shine with timeless elegance"
+                    },
+                    {
+                        id: 4,
+                        name: language === 'es' ? "Anillo de Zafiro Triple" : "Triple Sapphire Ring",
+                        price: 2800,
+                        image: "/api/placeholder/400/500",
+                        category: "Rings",
+                        stoneColor: "sapphire",
+                        numberOfRings: 3,
+                        description: language === 'es' 
+                            ? "Exquisito anillo con tres zafiros perfectamente alineados en oro blanco premium" 
+                            : "Exquisite ring with three perfectly aligned sapphires in premium white gold"
+                    },
+                    {
+                        id: 5,
+                        name: language === 'es' ? "Colgante de Perla" : "Pearl Pendant",
+                        price: 1200,
+                        image: "/api/placeholder/400/500",
+                        category: "Pendants",
+                        stoneColor: "pearl",
+                        numberOfRings: 0,
+                        description: language === 'es' 
+                            ? "Elegante colgante de perla natural con cadena de oro rosa delicadamente trabajada" 
+                            : "Elegant natural pearl pendant with delicately crafted rose gold chain"
+                    },
+                    {
+                        id: 6,
+                        name: language === 'es' ? "Conjunto de Amatista" : "Amethyst Set",
+                        price: 2200,
+                        image: "/api/placeholder/400/500",
+                        category: "Sets",
+                        stoneColor: "amethyst",
+                        numberOfRings: 2,
+                        description: language === 'es' 
+                            ? "Conjunto exclusivo de amatista con collar y aretes que irradian sofisticación" 
+                            : "Exclusive amethyst set with necklace and earrings that radiate sophistication"
+                    }
+                ];
+                setProducts(mockProducts);
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+            // Fallback to empty array but with a basic structure for demo
+            setProducts([]);
+        }
+    };
+
+    return (
+        <div>
+            <SimpleHero />
+            <SimpleProductGrid products={products} />
+            <FeaturesSection />
+            <TestimonialsSection />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
