@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build
+.svelte-kit/
+build/
+.vercel/
+.cloudflare/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+.playwright-mcp/
+
+# Misc
+*.local
+.cache/
