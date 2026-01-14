@@ -1,36 +1,32 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
-	import VerticalBrand from '$lib/components/ui/VerticalBrand.svelte';
 
 	// Featured product data
-	const heroImage = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=800&fit=crop';
+	const heroImage = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&h=1000&fit=crop';
 	const featuredProduct = {
 		name: 'Collar Nebulosa',
 		price: '$2,450'
 	};
 
-	// Element refs for animations
+	// Element refs
 	let heroSection: HTMLElement;
+	let frameOuter: HTMLElement;
+	let frameInner: HTMLElement;
+	let brandVertical: HTMLElement;
 	let eyebrow: HTMLElement;
-	let eyebrowLine: HTMLElement;
-	let mainTitle: HTMLElement;
-	let scriptAccent: HTMLElement;
+	let titleLine1: HTMLElement;
+	let titleLine2: HTMLElement;
+	let titleAccent: HTMLElement;
 	let description: HTMLElement;
 	let ctaButton: HTMLElement;
-	let productWrapper: HTMLElement;
+	let imageContainer: HTMLElement;
 	let productImage: HTMLElement;
-	let productGlow: HTMLElement;
 	let productTag: HTMLElement;
-	let decorativeSpiral: HTMLElement;
-	let decorativeSpiral2: HTMLElement;
-	let floatingParticles: HTMLElement[] = [];
-	let scrollIndicator: HTMLElement;
-	let particle1: HTMLElement;
-	let particle2: HTMLElement;
-	let particle3: HTMLElement;
-	let particle4: HTMLElement;
-	let particle5: HTMLElement;
+	let decoStar1: HTMLElement;
+	let decoStar2: HTMLElement;
+	let decoLines: HTMLElement;
+	let scrollCta: HTMLElement;
 
 	function scrollToProducts() {
 		const productsSection = document.querySelector('#productos');
@@ -43,216 +39,115 @@
 		const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		if (prefersReducedMotion) {
-			gsap.set([eyebrow, eyebrowLine, mainTitle, scriptAccent, description, ctaButton, productWrapper, productTag, decorativeSpiral, decorativeSpiral2, scrollIndicator], {
+			gsap.set([frameOuter, frameInner, brandVertical, eyebrow, titleLine1, titleLine2, titleAccent, description, ctaButton, imageContainer, productTag, decoStar1, decoStar2, decoLines, scrollCta], {
 				opacity: 1,
 				y: 0,
 				x: 0,
-				scale: 1
+				scale: 1,
+				clipPath: 'inset(0% 0% 0% 0%)'
 			});
 			return;
 		}
 
-		// Create entrance timeline
-		const tl = gsap.timeline({
-			defaults: {
-				ease: 'power3.out',
-				duration: 0.8
-			}
-		});
-
 		// Set initial states
-		gsap.set(eyebrowLine, { scaleX: 0, transformOrigin: 'left center' });
-		gsap.set(eyebrow, { opacity: 0, x: -20 });
-		gsap.set(mainTitle, { opacity: 0, y: 60, skewY: 3 });
-		gsap.set(scriptAccent, { opacity: 0, x: -30, rotation: -5 });
+		gsap.set(frameOuter, { opacity: 0 });
+		gsap.set(frameInner, { opacity: 0 });
+		gsap.set(brandVertical, { opacity: 0, x: -30 });
+		gsap.set(eyebrow, { opacity: 0, y: 20 });
+		gsap.set(titleLine1, { opacity: 0, y: 80, skewY: 5 });
+		gsap.set(titleLine2, { opacity: 0, y: 80, skewY: 5 });
+		gsap.set(titleAccent, { opacity: 0, x: -40 });
 		gsap.set(description, { opacity: 0, y: 30 });
-		gsap.set(ctaButton, { opacity: 0, y: 20, scale: 0.95 });
-		gsap.set(productWrapper, { opacity: 0, scale: 0.85, rotation: -5 });
-		gsap.set(productGlow, { opacity: 0, scale: 0.3 });
-		gsap.set(productTag, { opacity: 0, x: 30, y: 10 });
-		gsap.set(decorativeSpiral, { opacity: 0, scale: 0.3, rotation: -180 });
-		gsap.set(decorativeSpiral2, { opacity: 0, scale: 0.3, rotation: 180 });
-		gsap.set(scrollIndicator, { opacity: 0, y: -20 });
+		gsap.set(ctaButton, { opacity: 0, y: 20 });
+		gsap.set(imageContainer, { clipPath: 'inset(100% 0% 0% 0%)' });
+		gsap.set(productImage, { scale: 1.3 });
+		gsap.set(productTag, { opacity: 0, x: 30 });
+		gsap.set(decoStar1, { opacity: 0, scale: 0, rotation: -180 });
+		gsap.set(decoStar2, { opacity: 0, scale: 0, rotation: 180 });
+		gsap.set(decoLines, { opacity: 0 });
+		gsap.set(scrollCta, { opacity: 0, y: 20 });
 
-		// Set floating particles initial state
-		const particles = [particle1, particle2, particle3, particle4, particle5].filter(Boolean);
-		particles.forEach(p => {
-			gsap.set(p, { opacity: 0, scale: 0 });
+		// Animation timeline
+		const tl = gsap.timeline({
+			defaults: { ease: 'power3.out' }
 		});
 
-		// Animation sequence - more dramatic timing
 		tl
-			// Eyebrow line draws first
-			.to(eyebrowLine, {
-				scaleX: 1,
-				duration: 0.8,
-				ease: 'power2.inOut'
-			}, 0.2)
+			// Frame appears
+			.to(frameOuter, { opacity: 1, duration: 0.8 }, 0.2)
+			.to(frameInner, { opacity: 1, duration: 0.8 }, 0.4)
 
-			// Eyebrow text slides in
-			.to(eyebrow, {
-				opacity: 1,
-				x: 0,
-				duration: 0.6
-			}, 0.4)
+			// Decorative elements
+			.to(decoLines, { opacity: 1, duration: 1 }, 0.3)
+			.to(decoStar1, { opacity: 1, scale: 1, rotation: 0, duration: 1.2, ease: 'back.out(1.7)' }, 0.5)
+			.to(decoStar2, { opacity: 1, scale: 1, rotation: 0, duration: 1.2, ease: 'back.out(1.7)' }, 0.7)
 
-			// Main title - dramatic entrance with skew
-			.to(mainTitle, {
-				opacity: 1,
-				y: 0,
-				skewY: 0,
-				duration: 1.2,
-				ease: 'power4.out'
-			}, 0.5)
+			// Brand
+			.to(brandVertical, { opacity: 1, x: 0, duration: 0.8 }, 0.4)
 
-			// Script accent - elegant slide with rotation
-			.to(scriptAccent, {
-				opacity: 1,
-				x: 0,
-				rotation: 0,
-				duration: 1,
-				ease: 'elastic.out(1, 0.8)'
-			}, 0.9)
+			// Eyebrow
+			.to(eyebrow, { opacity: 1, y: 0, duration: 0.6 }, 0.5)
 
-			// Description fades up with stagger
-			.to(description, {
-				opacity: 1,
-				y: 0,
-				duration: 0.8
-			}, 1.1)
+			// Title lines with dramatic entrance
+			.to(titleLine1, { opacity: 1, y: 0, skewY: 0, duration: 1.2, ease: 'power4.out' }, 0.6)
+			.to(titleLine2, { opacity: 1, y: 0, skewY: 0, duration: 1.2, ease: 'power4.out' }, 0.75)
+			.to(titleAccent, { opacity: 1, x: 0, duration: 1, ease: 'power3.out' }, 1)
 
-			// CTA button - scale and fade
-			.to(ctaButton, {
-				opacity: 1,
-				y: 0,
-				scale: 1,
-				duration: 0.7,
-				ease: 'back.out(1.5)'
-			}, 1.3)
+			// Description
+			.to(description, { opacity: 1, y: 0, duration: 0.8 }, 1.1)
 
-			// Product wrapper - dramatic scale and rotation
-			.to(productWrapper, {
-				opacity: 1,
-				scale: 1,
-				rotation: 0,
-				duration: 1.4,
-				ease: 'power3.out'
-			}, 0.6)
+			// CTA
+			.to(ctaButton, { opacity: 1, y: 0, duration: 0.7 }, 1.2)
 
-			// Product glow expands dramatically
-			.to(productGlow, {
-				opacity: 1,
-				scale: 1,
-				duration: 2,
-				ease: 'power2.out'
-			}, 0.8)
+			// Image reveal - dramatic curtain effect
+			.to(imageContainer, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'power3.inOut' }, 0.6)
+			.to(productImage, { scale: 1, duration: 1.8, ease: 'power2.out' }, 0.6)
 
-			// Product tag slides in
-			.to(productTag, {
-				opacity: 1,
-				x: 0,
-				y: 0,
-				duration: 0.7,
-				ease: 'power2.out'
-			}, 1.5)
+			// Product tag
+			.to(productTag, { opacity: 1, x: 0, duration: 0.7 }, 1.5)
 
-			// Decorative spirals spin in from opposite directions
-			.to(decorativeSpiral, {
-				opacity: 0.6,
-				scale: 1,
-				rotation: 0,
-				duration: 1.2,
-				ease: 'back.out(1.7)'
-			}, 1.0)
+			// Scroll CTA
+			.to(scrollCta, { opacity: 1, y: 0, duration: 0.6 }, 1.6);
 
-			.to(decorativeSpiral2, {
-				opacity: 0.4,
-				scale: 1,
-				rotation: 0,
-				duration: 1.2,
-				ease: 'back.out(1.7)'
-			}, 1.2)
-
-			// Scroll indicator appears last
-			.to(scrollIndicator, {
-				opacity: 1,
-				y: 0,
-				duration: 0.6
-			}, 1.8);
-
-		// Floating particles animation
-		if (particles.length > 0) {
-			particles.forEach((p, i) => {
-				tl.to(p, {
-					opacity: 0.6,
-					scale: 1,
-					duration: 0.5,
-					ease: 'back.out(2)'
-				}, 1.2 + i * 0.1);
-
-				// Continuous floating animation
-				gsap.to(p, {
-					y: `random(-30, 30)`,
-					x: `random(-20, 20)`,
-					duration: 3 + Math.random() * 2,
-					repeat: -1,
-					yoyo: true,
-					ease: 'sine.inOut',
-					delay: i * 0.2
-				});
-			});
-		}
-
-		// Continuous rotation for spirals
-		gsap.to(decorativeSpiral, {
+		// Continuous animations
+		gsap.to(decoStar1, {
 			rotation: 360,
-			duration: 40,
+			duration: 60,
 			repeat: -1,
 			ease: 'none'
 		});
 
-		gsap.to(decorativeSpiral2, {
+		gsap.to(decoStar2, {
 			rotation: -360,
-			duration: 50,
+			duration: 80,
 			repeat: -1,
 			ease: 'none'
 		});
 
-		// Scroll indicator bounce animation
-		gsap.to(scrollIndicator, {
-			y: 10,
-			duration: 1.5,
-			repeat: -1,
-			yoyo: true,
-			ease: 'sine.inOut',
-			delay: 2.5
-		});
-
-		// Parallax effect on mouse move
+		// Parallax on mouse move
 		const handleMouseMove = (e: MouseEvent) => {
 			const { clientX, clientY } = e;
 			const x = (clientX / window.innerWidth - 0.5) * 2;
 			const y = (clientY / window.innerHeight - 0.5) * 2;
 
-			gsap.to(productWrapper, {
-				x: x * 20,
-				y: y * 15,
-				rotation: x * 2,
-				duration: 1,
-				ease: 'power2.out'
-			});
-
-			gsap.to(decorativeSpiral, {
-				x: x * -30,
-				y: y * -20,
+			gsap.to(productImage, {
+				x: x * 15,
+				y: y * 10,
 				duration: 1.2,
 				ease: 'power2.out'
 			});
 
-			gsap.to(decorativeSpiral2, {
-				x: x * 40,
-				y: y * 25,
+			gsap.to(decoStar1, {
+				x: x * -25,
+				y: y * -20,
 				duration: 1.5,
+				ease: 'power2.out'
+			});
+
+			gsap.to(decoStar2, {
+				x: x * 30,
+				y: y * 25,
+				duration: 1.8,
 				ease: 'power2.out'
 			});
 		};
@@ -267,93 +162,103 @@
 </script>
 
 <section class="hero" bind:this={heroSection}>
-	<!-- Decorative rotating spirals -->
-	<div class="decorative-spiral decorative-spiral--1" bind:this={decorativeSpiral}>
+	<!-- Art Deco Frame -->
+	<div class="hero-frame hero-frame--outer" bind:this={frameOuter}></div>
+	<div class="hero-frame hero-frame--inner" bind:this={frameInner}></div>
+
+	<!-- Decorative geometric lines -->
+	<div class="deco-lines" bind:this={decoLines}>
+		<div class="deco-line deco-line--1"></div>
+		<div class="deco-line deco-line--2"></div>
+		<div class="deco-line deco-line--3"></div>
+		<div class="deco-line deco-line--4"></div>
+	</div>
+
+	<!-- Decorative stars -->
+	<div class="deco-star deco-star--1" bind:this={decoStar1}>
 		<svg viewBox="0 0 100 100" fill="none">
-			<path d="M50 10 Q90 50 50 90 Q10 50 50 10" stroke="currentColor" stroke-width="0.5" fill="none"/>
-			<circle cx="50" cy="50" r="35" stroke="currentColor" stroke-width="0.5" fill="none"/>
+			<path d="M50 0 L53 47 L100 50 L53 53 L50 100 L47 53 L0 50 L47 47 Z" fill="currentColor"/>
+			<circle cx="50" cy="50" r="30" stroke="currentColor" stroke-width="0.5" fill="none"/>
+			<circle cx="50" cy="50" r="15" stroke="currentColor" stroke-width="0.5" fill="none"/>
+		</svg>
+	</div>
+
+	<div class="deco-star deco-star--2" bind:this={decoStar2}>
+		<svg viewBox="0 0 100 100" fill="none">
+			<polygon points="50,0 61,35 98,35 68,57 79,91 50,70 21,91 32,57 2,35 39,35" stroke="currentColor" stroke-width="0.5" fill="none"/>
 			<circle cx="50" cy="50" r="20" stroke="currentColor" stroke-width="0.5" fill="none"/>
-			<circle cx="50" cy="50" r="8" stroke="currentColor" stroke-width="0.5" fill="none"/>
 		</svg>
 	</div>
 
-	<div class="decorative-spiral decorative-spiral--2" bind:this={decorativeSpiral2}>
-		<svg viewBox="0 0 100 100" fill="none">
-			<path d="M50 5 L55 45 L95 50 L55 55 L50 95 L45 55 L5 50 L45 45 Z" stroke="currentColor" stroke-width="0.3" fill="none"/>
-			<circle cx="50" cy="50" r="25" stroke="currentColor" stroke-width="0.3" fill="none"/>
-		</svg>
-	</div>
-
-	<!-- Floating particles -->
-	<div class="floating-particles">
-		<div class="particle particle--1" bind:this={particle1}></div>
-		<div class="particle particle--2" bind:this={particle2}></div>
-		<div class="particle particle--3" bind:this={particle3}></div>
-		<div class="particle particle--4" bind:this={particle4}></div>
-		<div class="particle particle--5" bind:this={particle5}></div>
-	</div>
-
-	<!-- Main 3-column grid -->
-	<div class="hero__grid">
-		<!-- Left column - Vertical brand -->
-		<div class="hero__brand">
-			<VerticalBrand />
+	<!-- Main Grid -->
+	<div class="hero-grid">
+		<!-- Left: Vertical Brand -->
+		<div class="hero-brand" bind:this={brandVertical}>
+			<span class="brand-text">FAM</span>
+			<span class="brand-diamond"></span>
+			<span class="brand-text">UNIC</span>
 		</div>
 
-		<!-- Center column - Content -->
-		<div class="hero__content">
-			<div class="hero-eyebrow-wrapper">
-				<div class="hero-eyebrow-line" bind:this={eyebrowLine}></div>
-				<div class="hero-eyebrow" bind:this={eyebrow}>
-					<span>Coleccion 2025</span>
-				</div>
+		<!-- Center: Content -->
+		<div class="hero-content">
+			<div class="hero-eyebrow" bind:this={eyebrow}>
+				<span class="eyebrow-line"></span>
+				<span class="eyebrow-text">Colección 2025</span>
+				<span class="eyebrow-line"></span>
 			</div>
 
 			<div class="hero-title">
-				<h1 class="hero__main-title" bind:this={mainTitle}>Joyas</h1>
-				<p class="hero__script-accent" bind:this={scriptAccent}>del universo</p>
+				<h1>
+					<span class="title-line title-line--1" bind:this={titleLine1}>Joyas</span>
+					<span class="title-line title-line--2" bind:this={titleLine2}>del Cosmos</span>
+				</h1>
+				<p class="title-accent" bind:this={titleAccent}>— hecho a mano en México —</p>
 			</div>
 
 			<p class="hero-description" bind:this={description}>
-				Piezas unicas inspiradas en la vastedad del cosmos.
-				Cada joya cuenta una historia escrita en las estrellas,
-				creada con maestria artesanal y materiales celestiales.
+				Piezas únicas inspiradas en la vastedad del universo.
+				Cada joya cuenta una historia escrita en las estrellas.
 			</p>
 
 			<button class="hero-cta" bind:this={ctaButton} onclick={scrollToProducts}>
-				<span>Explorar coleccion</span>
-				<svg class="hero-cta__arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-					<path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/>
-				</svg>
+				<span class="cta-text">Explorar Colección</span>
+				<span class="cta-icon">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+						<path d="M5 12h14M12 5l7 7-7 7"/>
+					</svg>
+				</span>
 			</button>
 		</div>
 
-		<!-- Right column - Featured product -->
-		<div class="hero__product-wrapper" bind:this={productWrapper}>
-			<div class="hero-product">
-				<div class="hero-product__glow" bind:this={productGlow}></div>
-				<div class="hero-product__ring"></div>
+		<!-- Right: Featured Image -->
+		<div class="hero-image-wrapper">
+			<div class="hero-image-container" bind:this={imageContainer}>
 				<img
 					bind:this={productImage}
 					src={heroImage}
-					alt="Featured cosmic jewelry - {featuredProduct.name}"
-					class="hero-product__image"
+					alt="Featured: {featuredProduct.name}"
+					class="hero-image"
 				/>
+				<div class="image-overlay"></div>
 			</div>
 
-			<div class="hero-product__tag" bind:this={productTag}>
-				<span class="tag-label">Destacado</span>
+			<div class="product-tag" bind:this={productTag}>
+				<span class="tag-eyebrow">Destacado</span>
 				<span class="tag-name">{featuredProduct.name}</span>
 				<span class="tag-price">{featuredProduct.price}</span>
 			</div>
+
+			<!-- Corner ornaments -->
+			<div class="corner-ornament corner-ornament--tl"></div>
+			<div class="corner-ornament corner-ornament--br"></div>
 		</div>
 	</div>
 
-	<!-- Scroll indicator -->
-	<div class="scroll-indicator" bind:this={scrollIndicator}>
-		<span class="scroll-text">Scroll</span>
+	<!-- Scroll CTA -->
+	<div class="scroll-cta" bind:this={scrollCta}>
+		<span class="scroll-text">Descubrir</span>
 		<div class="scroll-line">
-			<div class="scroll-dot"></div>
+			<span class="scroll-dot"></span>
 		</div>
 	</div>
 </section>
@@ -362,180 +267,192 @@
 	.hero {
 		position: relative;
 		height: 100vh;
-		height: 100dvh; /* Dynamic viewport height for mobile */
-		min-height: 600px; /* Minimum for very short screens */
-		max-height: 100vh;
-		max-height: 100dvh;
+		height: 100dvh;
+		min-height: 600px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 5rem 1.5rem 3rem;
+		padding: 1.5rem;
 		overflow: hidden;
-		box-sizing: border-box;
+		background:
+			radial-gradient(ellipse 60% 50% at 70% 40%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+			radial-gradient(ellipse 50% 60% at 20% 70%, rgba(236, 72, 153, 0.05) 0%, transparent 50%),
+			var(--navy-deepest, #001239);
 	}
 
 	@media (min-width: 768px) {
 		.hero {
-			padding: 6rem 2rem 4rem;
+			padding: 2rem;
 		}
 	}
 
-	@media (min-width: 1024px) {
-		.hero {
-			padding: 4rem 3rem;
-		}
-	}
+	/* ═══════════════════════════════════════════════════════════════════
+	   ART DECO FRAME
+	   ═══════════════════════════════════════════════════════════════════ */
 
-	/* Decorative rotating spirals */
-	.decorative-spiral {
+	.hero-frame {
 		position: absolute;
 		pointer-events: none;
 	}
 
-	.decorative-spiral--1 {
-		top: 12%;
-		right: 8%;
-		width: 150px;
-		height: 150px;
-		color: var(--accent-purple, #8b5cf6);
-		opacity: 0.15;
+	.hero-frame--outer {
+		inset: 1rem;
+		border: 1px solid var(--purple-20, rgba(139, 92, 246, 0.2));
 	}
 
-	.decorative-spiral--2 {
-		bottom: 15%;
-		left: 5%;
-		width: 100px;
-		height: 100px;
-		color: var(--accent-pink, #ec4899);
-		opacity: 0.1;
+	.hero-frame--inner {
+		inset: 1.5rem;
+		border: 1px solid var(--purple-10, rgba(139, 92, 246, 0.1));
 	}
 
-	.decorative-spiral svg {
-		width: 100%;
-		height: 100%;
+	@media (min-width: 768px) {
+		.hero-frame--outer {
+			inset: 1.5rem;
+		}
+		.hero-frame--inner {
+			inset: 2rem;
+		}
 	}
 
-	/* Floating particles */
-	.floating-particles {
+	/* ═══════════════════════════════════════════════════════════════════
+	   DECORATIVE LINES
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	.deco-lines {
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
-		overflow: hidden;
 	}
 
-	.particle {
+	.deco-line {
 		position: absolute;
-		border-radius: 50%;
-		background: var(--accent-purple, #8b5cf6);
+		background: linear-gradient(to bottom, transparent, var(--purple-10, rgba(139, 92, 246, 0.1)), transparent);
 	}
 
-	.particle--1 {
-		width: 6px;
-		height: 6px;
-		top: 20%;
+	.deco-line--1 {
 		left: 15%;
+		top: 0;
+		bottom: 0;
+		width: 1px;
 	}
 
-	.particle--2 {
-		width: 4px;
-		height: 4px;
-		top: 35%;
-		right: 20%;
-		background: var(--accent-pink, #ec4899);
-	}
-
-	.particle--3 {
-		width: 8px;
-		height: 8px;
-		bottom: 30%;
-		left: 25%;
-	}
-
-	.particle--4 {
-		width: 5px;
-		height: 5px;
-		top: 60%;
-		right: 30%;
-		background: var(--accent-gold, #fbbf24);
-	}
-
-	.particle--5 {
-		width: 3px;
-		height: 3px;
-		bottom: 20%;
+	.deco-line--2 {
 		right: 15%;
+		top: 0;
+		bottom: 0;
+		width: 1px;
 	}
 
-	/* Eyebrow wrapper with animated line */
-	.hero-eyebrow-wrapper {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		margin-bottom: 1rem;
-	}
-
-	@media (min-width: 768px) {
-		.hero-eyebrow-wrapper {
-			gap: 1rem;
-			margin-bottom: 1.5rem;
-		}
-	}
-
-	.hero-eyebrow-line {
-		width: 40px;
+	.deco-line--3 {
+		top: 20%;
+		left: 0;
+		right: 0;
 		height: 1px;
-		background: var(--accent-purple, #8b5cf6);
+		background: linear-gradient(to right, transparent, var(--purple-10, rgba(139, 92, 246, 0.1)), transparent);
 	}
 
-	/* Main 3-column grid */
-	.hero__grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 1.5rem;
-		max-width: 1400px;
+	.deco-line--4 {
+		bottom: 20%;
+		left: 0;
+		right: 0;
+		height: 1px;
+		background: linear-gradient(to right, transparent, var(--purple-10, rgba(139, 92, 246, 0.1)), transparent);
+	}
+
+	/* ═══════════════════════════════════════════════════════════════════
+	   DECORATIVE STARS
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	.deco-star {
+		position: absolute;
+		pointer-events: none;
+		color: var(--purple, #8b5cf6);
+	}
+
+	.deco-star--1 {
+		top: 8%;
+		right: 10%;
+		width: 120px;
+		height: 120px;
+		opacity: 0.2;
+	}
+
+	.deco-star--2 {
+		bottom: 15%;
+		left: 8%;
+		width: 80px;
+		height: 80px;
+		opacity: 0.15;
+	}
+
+	.deco-star svg {
 		width: 100%;
 		height: 100%;
-		max-height: calc(100dvh - 8rem);
-		margin: 0 auto;
-		align-content: center;
 	}
 
-	@media (min-width: 768px) {
-		.hero__grid {
-			gap: 2rem;
-		}
+	/* ═══════════════════════════════════════════════════════════════════
+	   MAIN GRID
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	.hero-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 2rem;
+		max-width: 1300px;
+		width: 100%;
+		align-items: center;
+		padding: 3rem 1rem;
 	}
 
 	@media (min-width: 1024px) {
-		.hero__grid {
-			grid-template-columns: auto 1fr auto;
-			gap: 3rem;
-			align-items: center;
-			max-height: none;
-		}
-	}
-
-	@media (min-width: 1280px) {
-		.hero__grid {
+		.hero-grid {
+			grid-template-columns: auto 1fr 1fr;
 			gap: 4rem;
+			padding: 0 2rem;
 		}
 	}
 
-	/* Left column - Vertical brand */
-	.hero__brand {
+	/* ═══════════════════════════════════════════════════════════════════
+	   VERTICAL BRAND
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	.hero-brand {
 		display: none;
 	}
 
 	@media (min-width: 1024px) {
-		.hero__brand {
+		.hero-brand {
 			display: flex;
-			justify-content: center;
-			padding-left: 2rem;
+			flex-direction: column;
+			align-items: center;
+			gap: 1rem;
+			writing-mode: vertical-rl;
+			text-orientation: mixed;
+			transform: rotate(180deg);
 		}
 	}
 
-	/* Center column - Content */
-	.hero__content {
+	.brand-text {
+		font-family: var(--font-display, 'Bodoni Moda', serif);
+		font-size: 1rem;
+		font-weight: 400;
+		letter-spacing: 0.4em;
+		color: var(--white-50, rgba(255, 255, 255, 0.5));
+	}
+
+	.brand-diamond {
+		width: 6px;
+		height: 6px;
+		background: var(--purple, #8b5cf6);
+		transform: rotate(45deg);
+		flex-shrink: 0;
+	}
+
+	/* ═══════════════════════════════════════════════════════════════════
+	   CONTENT
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	.hero-content {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -544,268 +461,301 @@
 
 	/* Eyebrow */
 	.hero-eyebrow {
-		display: inline-flex;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
 	}
 
-	.hero-eyebrow span {
-		font-family: 'JetBrains Mono', monospace;
+	.eyebrow-line {
+		width: 30px;
+		height: 1px;
+		background: var(--purple, #8b5cf6);
+	}
+
+	.eyebrow-text {
+		font-family: var(--font-body, 'DM Sans', sans-serif);
 		font-size: 0.6875rem;
+		font-weight: 400;
 		letter-spacing: 0.25em;
 		text-transform: uppercase;
-		color: var(--white-50, rgba(255, 255, 255, 0.5));
+		color: var(--purple-light, #a78bfa);
 	}
 
-	/* Title wrapper */
+	/* Title */
 	.hero-title {
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
 	}
 
-	@media (min-width: 768px) {
-		.hero-title {
-			margin-bottom: 1.5rem;
-		}
+	.hero-title h1 {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
 	}
 
-	/* Main title */
-	.hero__main-title {
-		font-family: 'Playfair Display', Georgia, serif;
-		font-size: clamp(3rem, 10vw, 7rem);
+	.title-line {
+		display: block;
+		font-family: var(--font-display, 'Bodoni Moda', serif);
 		font-weight: 400;
 		line-height: 0.9;
 		color: var(--white, #ffffff);
-		margin: 0;
 	}
 
-	@media (min-height: 800px) {
-		.hero__main-title {
-			font-size: clamp(4rem, 12vw, 8rem);
-		}
+	.title-line--1 {
+		font-size: clamp(3.5rem, 12vw, 8rem);
+		letter-spacing: -0.03em;
 	}
 
-	/* Script accent */
-	.hero__script-accent {
-		font-family: 'Pinyon Script', cursive;
-		font-size: clamp(1.5rem, 4vw, 3rem);
-		color: var(--accent-purple, #8b5cf6);
-		text-shadow: 0 0 30px rgba(139, 92, 246, 0.5), 0 0 60px rgba(139, 92, 246, 0.3);
-		margin: 0;
-		margin-left: 0.5rem;
-		margin-top: 0.25rem;
+	.title-line--2 {
+		font-size: clamp(2.5rem, 8vw, 5.5rem);
+		letter-spacing: -0.02em;
+		color: var(--white-70, rgba(255, 255, 255, 0.7));
 	}
 
-	@media (min-width: 768px) {
-		.hero__script-accent {
-			font-size: clamp(2rem, 5vw, 3.5rem);
-			margin-left: 1rem;
-			margin-top: 0.5rem;
-		}
+	.title-accent {
+		font-family: var(--font-elegant, 'Cormorant Garamond', serif);
+		font-size: clamp(1rem, 2vw, 1.25rem);
+		font-style: italic;
+		font-weight: 300;
+		color: var(--purple-light, #a78bfa);
+		margin: 0.75rem 0 0 0;
+		letter-spacing: 0.05em;
 	}
 
 	/* Description */
 	.hero-description {
-		font-family: 'Inter', system-ui, sans-serif;
-		font-size: 0.875rem;
-		line-height: 1.6;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
+		font-size: 0.9375rem;
+		font-weight: 300;
+		line-height: 1.8;
 		color: var(--white-70, rgba(255, 255, 255, 0.7));
-		max-width: 400px;
-		margin-bottom: 1.5rem;
-	}
-
-	@media (min-width: 768px) {
-		.hero-description {
-			font-size: 1rem;
-			line-height: 1.7;
-			margin-bottom: 2rem;
-		}
+		max-width: 380px;
+		margin-bottom: 2.5rem;
 	}
 
 	/* CTA Button */
 	.hero-cta {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5rem;
-		padding: 0.75rem 1.5rem;
+		gap: 1rem;
+		padding: 1rem 2rem;
 		background: transparent;
-		border: 1px solid var(--white-30, rgba(255, 255, 255, 0.3));
-		color: var(--white, #ffffff);
-		font-family: 'JetBrains Mono', monospace;
-		font-size: 0.6875rem;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
+		border: 1px solid var(--purple, #8b5cf6);
+		color: var(--purple-light, #a78bfa);
 		cursor: pointer;
-		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		position: relative;
+		overflow: hidden;
+		transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 	}
 
-	@media (min-width: 768px) {
-		.hero-cta {
-			gap: 0.75rem;
-			padding: 1rem 2rem;
-			font-size: 0.75rem;
-		}
+	.hero-cta::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: var(--purple, #8b5cf6);
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+		z-index: 0;
+	}
+
+	.hero-cta:hover::before {
+		transform: scaleX(1);
 	}
 
 	.hero-cta:hover {
-		background: var(--white, #ffffff);
-		color: var(--navy-deepest, #001239);
-		border-color: var(--white, #ffffff);
+		color: var(--white, #ffffff);
 	}
 
-	.hero-cta__arrow {
-		transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+	.cta-text {
+		position: relative;
+		z-index: 1;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
+		font-size: 0.75rem;
+		font-weight: 400;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
 	}
 
-	.hero-cta:hover .hero-cta__arrow {
+	.cta-icon {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		transition: transform 0.4s ease;
+	}
+
+	.hero-cta:hover .cta-icon {
 		transform: translateX(4px);
 	}
 
-	/* Right column - Product */
-	.hero__product-wrapper {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
+	/* ═══════════════════════════════════════════════════════════════════
+	   IMAGE SECTION
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	.hero-image-wrapper {
 		position: relative;
+		display: flex;
+		justify-content: center;
 	}
 
-	.hero-product {
+	.hero-image-container {
 		position: relative;
 		width: 100%;
-		max-width: min(280px, 45vw);
-		aspect-ratio: 1;
-	}
-
-	@media (min-width: 768px) {
-		.hero-product {
-			max-width: min(320px, 40vw);
-		}
+		max-width: 350px;
+		aspect-ratio: 3/4;
+		overflow: hidden;
 	}
 
 	@media (min-width: 1024px) {
-		.hero-product {
-			max-width: min(350px, 25vw);
-		}
-	}
-
-	@media (min-height: 800px) and (min-width: 1024px) {
-		.hero-product {
+		.hero-image-container {
 			max-width: 400px;
 		}
 	}
 
-	.hero-product__glow {
+	.hero-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.image-overlay {
 		position: absolute;
-		inset: -20%;
-		background: radial-gradient(
-			circle at center,
-			rgba(139, 92, 246, 0.2) 0%,
-			rgba(139, 92, 246, 0.05) 40%,
-			transparent 70%
+		inset: 0;
+		background: linear-gradient(
+			to bottom,
+			transparent 60%,
+			rgba(0, 18, 57, 0.4) 100%
 		);
 		pointer-events: none;
 	}
 
-	.hero-product__image {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		animation: product-float 6s ease-in-out infinite;
-	}
-
-	@keyframes product-float {
-		0%, 100% {
-			transform: translateY(0) rotate(-2deg);
-		}
-		50% {
-			transform: translateY(-20px) rotate(2deg);
-		}
-	}
-
-	/* Product tag */
-	.hero-product__tag {
+	/* Product Tag */
+	.product-tag {
 		position: absolute;
 		bottom: -1rem;
-		right: -1rem;
+		right: -0.5rem;
 		display: flex;
 		flex-direction: column;
-		align-items: flex-start;
 		gap: 0.25rem;
-		padding: 1rem 1.5rem;
+		padding: 1.25rem 1.5rem;
 		background: var(--white, #ffffff);
 		color: var(--navy-deepest, #001239);
 	}
 
-	.tag-label {
-		font-family: 'JetBrains Mono', monospace;
+	@media (min-width: 1024px) {
+		.product-tag {
+			right: -1.5rem;
+		}
+	}
+
+	.tag-eyebrow {
+		font-family: var(--font-body, 'DM Sans', sans-serif);
 		font-size: 0.5625rem;
+		font-weight: 400;
 		letter-spacing: 0.2em;
 		text-transform: uppercase;
-		color: var(--accent-purple, #8b5cf6);
+		color: var(--purple, #8b5cf6);
 	}
 
 	.tag-name {
-		font-family: 'Playfair Display', Georgia, serif;
-		font-size: 1rem;
-		font-weight: 500;
+		font-family: var(--font-display, 'Bodoni Moda', serif);
+		font-size: 1.125rem;
+		font-weight: 400;
 	}
 
 	.tag-price {
-		font-family: 'JetBrains Mono', monospace;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
 		font-size: 0.875rem;
+		font-weight: 300;
+		color: var(--navy-medium, #002266);
 	}
 
-	/* Product ring decoration */
-	.hero-product__ring {
+	/* Corner Ornaments */
+	.corner-ornament {
 		position: absolute;
-		inset: -10%;
-		border: 1px solid var(--white-10, rgba(255, 255, 255, 0.1));
-		border-radius: 50%;
-		animation: ring-rotate 20s linear infinite;
+		width: 2rem;
+		height: 2rem;
+		pointer-events: none;
 	}
 
-	.hero-product__ring::before {
+	.corner-ornament::before,
+	.corner-ornament::after {
 		content: '';
 		position: absolute;
+		background: var(--purple, #8b5cf6);
+	}
+
+	.corner-ornament::before {
+		width: 100%;
+		height: 1px;
+	}
+
+	.corner-ornament::after {
+		width: 1px;
+		height: 100%;
+	}
+
+	.corner-ornament--tl {
+		top: -0.5rem;
+		left: -0.5rem;
+	}
+
+	.corner-ornament--tl::before {
 		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		width: 8px;
-		height: 8px;
-		background: var(--accent-purple, #8b5cf6);
-		border-radius: 50%;
+		left: 0;
 	}
 
-	@keyframes ring-rotate {
-		from { transform: rotate(0deg); }
-		to { transform: rotate(360deg); }
+	.corner-ornament--tl::after {
+		top: 0;
+		left: 0;
 	}
 
-	/* Scroll indicator */
-	.scroll-indicator {
+	.corner-ornament--br {
+		bottom: 1.5rem;
+		right: 1rem;
+	}
+
+	@media (min-width: 1024px) {
+		.corner-ornament--br {
+			right: 0;
+		}
+	}
+
+	.corner-ornament--br::before {
+		bottom: 0;
+		right: 0;
+	}
+
+	.corner-ornament--br::after {
+		bottom: 0;
+		right: 0;
+	}
+
+	/* ═══════════════════════════════════════════════════════════════════
+	   SCROLL CTA
+	   ═══════════════════════════════════════════════════════════════════ */
+
+	.scroll-cta {
 		position: absolute;
-		bottom: 1rem;
+		bottom: 2rem;
 		left: 50%;
 		transform: translateX(-50%);
 		display: none;
 		flex-direction: column;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 0.75rem;
 	}
 
 	@media (min-height: 700px) {
-		.scroll-indicator {
+		.scroll-cta {
 			display: flex;
-			bottom: 1.5rem;
-		}
-	}
-
-	@media (min-height: 800px) {
-		.scroll-indicator {
-			bottom: 2rem;
 		}
 	}
 
 	.scroll-text {
-		font-family: 'JetBrains Mono', monospace;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
 		font-size: 0.625rem;
+		font-weight: 400;
 		letter-spacing: 0.2em;
 		text-transform: uppercase;
 		color: var(--white-30, rgba(255, 255, 255, 0.3));
@@ -813,8 +763,8 @@
 
 	.scroll-line {
 		width: 1px;
-		height: 40px;
-		background: linear-gradient(to bottom, var(--white-30, rgba(255, 255, 255, 0.3)), transparent);
+		height: 50px;
+		background: linear-gradient(to bottom, var(--purple-30, rgba(139, 92, 246, 0.3)), transparent);
 		position: relative;
 	}
 
@@ -825,30 +775,34 @@
 		transform: translateX(-50%);
 		width: 4px;
 		height: 4px;
-		background: var(--accent-purple, #8b5cf6);
+		background: var(--purple, #8b5cf6);
 		border-radius: 50%;
-		animation: scroll-dot 2s ease-in-out infinite;
+		animation: scroll-pulse 2s ease-in-out infinite;
 	}
 
-	@keyframes scroll-dot {
-		0%, 100% { top: 0; opacity: 1; }
-		50% { top: 100%; opacity: 0; }
+	@keyframes scroll-pulse {
+		0%, 100% {
+			top: 0;
+			opacity: 1;
+		}
+		50% {
+			top: 100%;
+			opacity: 0;
+		}
 	}
 
-	/* Reduced motion */
+	/* ═══════════════════════════════════════════════════════════════════
+	   REDUCED MOTION
+	   ═══════════════════════════════════════════════════════════════════ */
+
 	@media (prefers-reduced-motion: reduce) {
-		.hero-product__image,
-		.hero-product__ring,
+		.deco-star,
 		.scroll-dot {
 			animation: none;
 		}
 
-		.decorative-spiral {
-			animation: none;
-		}
-
-		.particle {
-			animation: none;
+		.hero-cta::before {
+			transition: none;
 		}
 	}
 </style>

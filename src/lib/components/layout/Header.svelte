@@ -4,13 +4,11 @@
 	import { cart } from '$stores/cart.svelte';
 	import { t } from '$utils/i18n';
 
-	// State with Svelte 5 runes
 	let isScrolled = $state(false);
 	let hidden = $state(false);
 	let isMobileMenuOpen = $state(false);
 	let lastScrollY = $state(0);
 
-	// Navigation links per specification
 	const navLinks = [
 		{ href: '#productos', key: 'nav.products', isPage: false },
 		{ href: '/nosotros', key: 'nav.about', isPage: true },
@@ -19,11 +17,8 @@
 
 	function handleScroll() {
 		const currentScrollY = window.scrollY;
-
-		// Determine if scrolled past threshold for glass effect
 		isScrolled = currentScrollY > 50;
 
-		// Hide on scroll down, show on scroll up (only after 100px)
 		if (currentScrollY > 100) {
 			hidden = currentScrollY > lastScrollY;
 		} else {
@@ -68,7 +63,6 @@
 		}
 	});
 
-	// Close mobile menu on escape key
 	$effect(() => {
 		if (typeof window !== 'undefined' && isMobileMenuOpen) {
 			const handleEscape = (e: KeyboardEvent) => {
@@ -81,7 +75,6 @@
 		}
 	});
 
-	// Prevent body scroll when mobile menu is open
 	$effect(() => {
 		if (typeof document !== 'undefined') {
 			if (isMobileMenuOpen) {
@@ -102,29 +95,16 @@
 		<nav class="header-nav">
 			<!-- Logo -->
 			<a href="/" class="logo" aria-label="Fam Unic - Home">
-				<div class="logo-icon">
-					<svg
-						viewBox="0 0 40 40"
-						class="logo-spiral"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.5"
-					>
-						<path
-							d="M20 4 C 30 4, 36 10, 36 20 C 36 28, 30 34, 22 34 C 14 34, 10 28, 10 22 C 10 16, 14 12, 20 12 C 24 12, 28 16, 28 20 C 28 24, 24 26, 20 26 C 18 26, 16 24, 16 20"
-						/>
-					</svg>
-				</div>
-				<span class="logo-text font-script">fam unic</span>
+				<span class="logo-diamond"></span>
+				<span class="logo-text">fam unic</span>
 			</a>
 
-			<!-- Desktop Navigation - Centered -->
+			<!-- Desktop Navigation -->
 			<div class="nav-links">
 				{#each navLinks as link (link.href)}
 					{#if link.isPage}
 						<a href={link.href} class="nav-link">
 							<span class="nav-link-text">{t(language.current, link.key)}</span>
-							<span class="nav-link-underline"></span>
 						</a>
 					{:else}
 						<button
@@ -133,7 +113,6 @@
 							class="nav-link"
 						>
 							<span class="nav-link-text">{t(language.current, link.key)}</span>
-							<span class="nav-link-underline"></span>
 						</button>
 					{/if}
 				{/each}
@@ -141,7 +120,6 @@
 
 			<!-- Right side controls -->
 			<div class="header-controls">
-				<!-- Language toggle -->
 				<button
 					type="button"
 					onclick={toggleLanguage}
@@ -151,7 +129,6 @@
 					{language.current.toUpperCase()}
 				</button>
 
-				<!-- Currency toggle -->
 				<button
 					type="button"
 					onclick={toggleCurrency}
@@ -161,7 +138,6 @@
 					{currency.current}
 				</button>
 
-				<!-- Cart button -->
 				<button
 					type="button"
 					onclick={toggleCart}
@@ -177,7 +153,7 @@
 						<path
 							stroke-linecap="round"
 							stroke-linejoin="round"
-							stroke-width="1.5"
+							stroke-width="1"
 							d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
 						/>
 					</svg>
@@ -186,7 +162,6 @@
 					{/if}
 				</button>
 
-				<!-- Mobile menu button -->
 				<button
 					type="button"
 					onclick={toggleMobileMenu}
@@ -195,7 +170,6 @@
 					aria-expanded={isMobileMenuOpen}
 				>
 					<span class="hamburger" class:hamburger-open={isMobileMenuOpen}>
-						<span class="hamburger-line"></span>
 						<span class="hamburger-line"></span>
 						<span class="hamburger-line"></span>
 					</span>
@@ -261,7 +235,10 @@
 </div>
 
 <style>
-	/* Header Base */
+	/* ═══════════════════════════════════════════════════════════════════
+	   HEADER - Art Deco Style with Navy/Purple Theme
+	   ═══════════════════════════════════════════════════════════════════ */
+
 	.header {
 		position: fixed;
 		top: 0;
@@ -273,10 +250,10 @@
 	}
 
 	.header-scrolled {
-		background: rgba(0, 18, 57, 0.9);
+		background: rgba(0, 18, 57, 0.92);
 		backdrop-filter: blur(20px);
 		-webkit-backdrop-filter: blur(20px);
-		border-bottom: 1px solid var(--white-10, rgba(255, 255, 255, 0.1));
+		border-bottom: 1px solid var(--purple-10, rgba(139, 92, 246, 0.1));
 	}
 
 	.header-hidden {
@@ -302,7 +279,7 @@
 		}
 	}
 
-	/* Logo */
+	/* ─── Logo ─── */
 	.logo {
 		display: flex;
 		align-items: center;
@@ -310,35 +287,27 @@
 		flex-shrink: 0;
 	}
 
-	.logo-icon {
-		width: 2rem;
-		height: 2rem;
-		position: relative;
+	.logo-diamond {
+		width: 8px;
+		height: 8px;
+		background: var(--purple, #8b5cf6);
+		transform: rotate(45deg);
+		transition: transform 0.5s ease, background 0.3s ease;
 	}
 
-	@media (min-width: 768px) {
-		.logo-icon {
-			width: 2.5rem;
-			height: 2.5rem;
-		}
-	}
-
-	.logo-spiral {
-		width: 100%;
-		height: 100%;
-		color: var(--accent-purple, #8b5cf6);
-		transition: transform 0.7s ease, color 0.4s ease;
-	}
-
-	.logo:hover .logo-spiral {
-		transform: rotate(180deg);
-		color: var(--white-white);
+	.logo:hover .logo-diamond {
+		transform: rotate(225deg);
+		background: var(--white, #ffffff);
 	}
 
 	.logo-text {
-		font-size: 1.25rem;
-		color: var(--white-white);
-		transition: text-shadow 0.4s ease;
+		font-family: var(--font-elegant, 'Cormorant Garamond', serif);
+		font-size: 1.375rem;
+		font-weight: 400;
+		font-style: italic;
+		color: var(--white, #ffffff);
+		letter-spacing: 0.02em;
+		transition: color 0.3s ease;
 	}
 
 	@media (min-width: 768px) {
@@ -348,16 +317,16 @@
 	}
 
 	.logo:hover .logo-text {
-		text-shadow: var(--glow-purple);
+		color: var(--purple-light, #a78bfa);
 	}
 
-	/* Navigation Links - Centered */
+	/* ─── Navigation Links ─── */
 	.nav-links {
 		display: none;
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
-		gap: 2.5rem;
+		gap: 3rem;
 	}
 
 	@media (min-width: 768px) {
@@ -372,39 +341,41 @@
 		border: none;
 		padding: 0.5rem 0;
 		cursor: pointer;
-		font-family: inherit;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
 		text-decoration: none;
 		color: inherit;
 	}
 
 	.nav-link-text {
-		font-size: 0.875rem;
-		letter-spacing: 0.02em;
-		color: var(--white-70);
+		font-size: 0.8125rem;
+		font-weight: 300;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--white-70, rgba(255, 255, 255, 0.7));
 		transition: color 0.4s ease;
 	}
 
 	.nav-link:hover .nav-link-text {
-		color: var(--white-white);
+		color: var(--purple-light, #a78bfa);
 	}
 
-	.nav-link-underline {
+	.nav-link::after {
+		content: '';
 		position: absolute;
 		bottom: 0;
-		left: 0;
-		width: 100%;
-		height: 1px;
-		background: var(--accent-purple, #8b5cf6);
-		transform: scaleX(0);
-		transform-origin: left;
-		transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		left: 50%;
+		width: 4px;
+		height: 4px;
+		background: var(--purple, #8b5cf6);
+		transform: translateX(-50%) rotate(45deg) scale(0);
+		transition: transform 0.4s ease;
 	}
 
-	.nav-link:hover .nav-link-underline {
-		transform: scaleX(1);
+	.nav-link:hover::after {
+		transform: translateX(-50%) rotate(45deg) scale(1);
 	}
 
-	/* Header Controls */
+	/* ─── Header Controls ─── */
 	.header-controls {
 		display: flex;
 		align-items: center;
@@ -418,22 +389,21 @@
 	}
 
 	.control-toggle {
-		font-size: 0.75rem;
-		font-weight: 500;
-		font-family: inherit;
-		letter-spacing: 0.05em;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
+		font-size: 0.6875rem;
+		font-weight: 400;
+		letter-spacing: 0.1em;
 		padding: 0.375rem 0.75rem;
 		background: none;
-		border: 1px solid var(--white-30);
-		border-radius: 9999px;
-		color: var(--white-70);
+		border: 1px solid var(--white-20, rgba(255, 255, 255, 0.2));
+		color: var(--white-70, rgba(255, 255, 255, 0.7));
 		cursor: pointer;
 		transition: all 0.4s ease;
 	}
 
 	.control-toggle:hover {
-		border-color: var(--accent-purple, #8b5cf6);
-		color: var(--white-white);
+		border-color: var(--purple, #8b5cf6);
+		color: var(--purple-light, #a78bfa);
 	}
 
 	.control-toggle-hidden-mobile {
@@ -446,7 +416,7 @@
 		}
 	}
 
-	/* Cart Button */
+	/* ─── Cart Button ─── */
 	.cart-button {
 		position: relative;
 		display: flex;
@@ -456,12 +426,12 @@
 		background: none;
 		border: none;
 		cursor: pointer;
-		color: var(--white-70);
+		color: var(--white-70, rgba(255, 255, 255, 0.7));
 		transition: color 0.4s ease;
 	}
 
 	.cart-button:hover {
-		color: var(--white-white);
+		color: var(--purple-light, #a78bfa);
 	}
 
 	.cart-icon {
@@ -471,8 +441,8 @@
 
 	@media (min-width: 768px) {
 		.cart-icon {
-			width: 1.5rem;
-			height: 1.5rem;
+			width: 1.375rem;
+			height: 1.375rem;
 		}
 	}
 
@@ -480,20 +450,20 @@
 		position: absolute;
 		top: 0;
 		right: 0;
-		min-width: 1.125rem;
-		height: 1.125rem;
+		min-width: 1rem;
+		height: 1rem;
 		padding: 0 0.25rem;
-		background: var(--accent-purple, #8b5cf6);
-		color: var(--white-white);
-		font-size: 0.625rem;
-		font-weight: 600;
-		border-radius: 9999px;
+		background: var(--purple, #8b5cf6);
+		color: var(--white, #ffffff);
+		font-family: var(--font-body, 'DM Sans', sans-serif);
+		font-size: 0.5625rem;
+		font-weight: 500;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
-	/* Mobile Menu Toggle */
+	/* ─── Mobile Menu Toggle ─── */
 	.mobile-menu-toggle {
 		display: flex;
 		align-items: center;
@@ -515,42 +485,37 @@
 	.hamburger {
 		display: flex;
 		flex-direction: column;
-		gap: 5px;
+		gap: 6px;
 		width: 20px;
 	}
 
 	.hamburger-line {
 		width: 100%;
-		height: 1.5px;
-		background: var(--white-70);
+		height: 1px;
+		background: var(--white-70, rgba(255, 255, 255, 0.7));
 		transition: all 0.4s ease;
 		transform-origin: center;
 	}
 
 	.hamburger-open .hamburger-line:nth-child(1) {
-		transform: translateY(6.5px) rotate(45deg);
+		transform: translateY(3.5px) rotate(45deg);
 	}
 
 	.hamburger-open .hamburger-line:nth-child(2) {
-		opacity: 0;
-		transform: scaleX(0);
+		transform: translateY(-3.5px) rotate(-45deg);
 	}
 
-	.hamburger-open .hamburger-line:nth-child(3) {
-		transform: translateY(-6.5px) rotate(-45deg);
-	}
-
-	/* Mobile Overlay */
+	/* ─── Mobile Overlay ─── */
 	.mobile-overlay {
 		position: fixed;
 		inset: 0;
 		z-index: 40;
-		background: rgba(0, 0, 0, 0.5);
+		background: rgba(0, 10, 30, 0.7);
 		backdrop-filter: blur(4px);
 		-webkit-backdrop-filter: blur(4px);
 	}
 
-	/* Mobile Menu */
+	/* ─── Mobile Menu ─── */
 	.mobile-menu {
 		position: fixed;
 		top: 0;
@@ -559,10 +524,8 @@
 		width: 100%;
 		max-width: 320px;
 		z-index: 45;
-		background: rgba(0, 18, 57, 0.95);
-		backdrop-filter: blur(20px);
-		-webkit-backdrop-filter: blur(20px);
-		border-left: 1px solid var(--white-10, rgba(255, 255, 255, 0.1));
+		background: var(--navy-deepest, #001239);
+		border-left: 1px solid var(--purple-10, rgba(139, 92, 246, 0.1));
 		transform: translateX(100%);
 		transition: transform 0.4s ease;
 	}
@@ -579,14 +542,14 @@
 	}
 
 	.mobile-nav-link {
-		font-size: 1.5rem;
-		font-weight: 300;
-		font-family: 'Playfair Display', Georgia, serif;
-		color: var(--white-70);
+		font-family: var(--font-display, 'Bodoni Moda', serif);
+		font-size: 1.75rem;
+		font-weight: 400;
+		color: var(--white-70, rgba(255, 255, 255, 0.7));
 		padding: 1rem 0;
 		background: none;
 		border: none;
-		border-bottom: 1px solid var(--white-10);
+		border-bottom: 1px solid var(--purple-10, rgba(139, 92, 246, 0.1));
 		text-align: left;
 		cursor: pointer;
 		transition: color 0.4s ease;
@@ -612,7 +575,7 @@
 	}
 
 	.mobile-nav-link:hover {
-		color: var(--white-white);
+		color: var(--purple-light, #a78bfa);
 	}
 
 	.mobile-controls {
@@ -621,7 +584,7 @@
 		flex-direction: column;
 		gap: 1rem;
 		padding-top: 2rem;
-		border-top: 1px solid var(--white-10);
+		border-top: 1px solid var(--purple-10, rgba(139, 92, 246, 0.1));
 	}
 
 	.mobile-control-group {
@@ -631,27 +594,28 @@
 	}
 
 	.mobile-control-label {
-		font-size: 0.75rem;
-		letter-spacing: 0.1em;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
+		font-size: 0.6875rem;
+		font-weight: 400;
+		letter-spacing: 0.15em;
 		text-transform: uppercase;
-		color: var(--white-50);
+		color: var(--white-50, rgba(255, 255, 255, 0.5));
 	}
 
 	.mobile-control-button {
-		font-size: 0.875rem;
-		font-weight: 500;
-		font-family: inherit;
+		font-family: var(--font-body, 'DM Sans', sans-serif);
+		font-size: 0.8125rem;
+		font-weight: 400;
 		padding: 0.5rem 1rem;
 		background: none;
-		border: 1px solid var(--white-30);
-		border-radius: 9999px;
-		color: var(--white-70);
+		border: 1px solid var(--purple-20, rgba(139, 92, 246, 0.2));
+		color: var(--white-70, rgba(255, 255, 255, 0.7));
 		cursor: pointer;
 		transition: all 0.4s ease;
 	}
 
 	.mobile-control-button:hover {
-		border-color: var(--accent-purple, #8b5cf6);
-		color: var(--white-white);
+		border-color: var(--purple, #8b5cf6);
+		color: var(--purple-light, #a78bfa);
 	}
 </style>
