@@ -7,7 +7,6 @@
 	import Footer from '$components/layout/Footer.svelte';
 	import CartDrawer from '$components/layout/CartDrawer.svelte';
 	import CosmicBackground from '$components/ui/CosmicBackground.svelte';
-	import CosmicCursor from '$components/ui/CosmicCursor.svelte';
 	import LoadingScreen from '$components/ui/LoadingScreen.svelte';
 
 	let { children } = $props();
@@ -42,9 +41,6 @@
 
 <!-- CSS-only cosmic background (navy gradients) -->
 <CosmicBackground />
-
-<!-- Custom cursor with stardust particles -->
-<CosmicCursor />
 
 <!-- Main app structure -->
 <div class="app-container" class:content-ready={contentReady}>

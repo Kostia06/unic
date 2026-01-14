@@ -52,44 +52,41 @@
 
 		gsap.set(tagline, { opacity: 0, y: 10 });
 
-		// Create animation timeline
+		// Create animation timeline (~1 second total)
 		const tl = gsap.timeline({
 			onComplete: () => {
-				setTimeout(completeLoading, 300);
+				completeLoading();
 			}
 		});
 
 		// Draw spiral first
 		tl.to(spiralPath, {
 			strokeDashoffset: 0,
-			duration: 1,
+			duration: 0.4,
 			ease: 'power2.inOut'
 		});
 
 		// Draw text letters with stagger
 		tl.to(textPaths, {
 			strokeDashoffset: 0,
-			duration: 0.8,
-			stagger: 0.1,
+			duration: 0.3,
+			stagger: 0.03,
 			ease: 'power2.out'
-		}, '-=0.3');
+		}, '-=0.1');
 
 		// Fade in tagline
 		tl.to(tagline, {
 			opacity: 1,
 			y: 0,
-			duration: 0.5,
+			duration: 0.2,
 			ease: 'power2.out'
-		}, '-=0.2');
-
-		// Hold for a moment then prepare to exit
-		tl.to({}, { duration: 0.5 });
+		}, '-=0.1');
 	});
 
 	function completeLoading() {
 		gsap.to(container, {
 			opacity: 0,
-			duration: 0.5,
+			duration: 0.25,
 			ease: 'power2.inOut',
 			onComplete: () => {
 				isVisible = false;
